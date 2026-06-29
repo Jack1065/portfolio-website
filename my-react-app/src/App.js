@@ -25,6 +25,13 @@ function App() {
     return () => window.removeEventListener('show-welcome', handler);
   }, []);
 
+  // Auto-dismiss the intro after the entrance animation so it isn't a hard gate.
+  useEffect(() => {
+    if (!showWelcome) return;
+    const timer = setTimeout(() => setShowWelcome(false), 2600);
+    return () => clearTimeout(timer);
+  }, [showWelcome]);
+
   const handleContinue = () => {
     try { localStorage.setItem('dashboard.welcome.seen', '1'); } catch (e) {}
     setShowWelcome(false);

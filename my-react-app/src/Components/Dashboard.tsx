@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './styling/Dashboard.css';
-import ThreeCardAnimator from './ThreeCardAnimator.tsx';
 
 type Project = {
   id: string;
@@ -16,290 +15,378 @@ type ExperienceItem = {
   company: string;
   location?: string;
   period: string;
-  description: string;
+  summary?: string;
   bullets?: string[];
+  tools?: string[];
+  current?: boolean;
 };
 
-const sampleProjects: Project[] = [
+const projects: Project[] = [
   {
     id: 'p1',
-    title: 'Portfolio Website',
-    description: 'A fast, accessible personal site built with React.',
-    tech: ['React', 'TypeScript', 'Tailwind', 'Three.js'],
+    title: 'AP Invoice Automation',
+    description:
+      'Azure Durable Functions pipeline integrated with Azure AI Foundry that eliminated 1,500 manual entry hours annually across four business divisions.',
+    tech: ['Azure Durable Functions', 'AI Foundry', 'React', '.NET', 'Terraform'],
     link: 'https://github.com/Jack1065?tab=repositories',
   },
   {
     id: 'p2',
-    title: 'Neuro Drone',
-    description: 'Full-stack drone management system with real-time data processing.',
-    tech: ['Node', 'Express', 'Postgres', 'Python'],
+    title: 'BOM Extraction Tool',
+    description:
+      'Bill of Materials extraction for wire-harness engineering drawings using Azure Content Understanding, cross-referenced against Epicor ERP.',
+    tech: ['Azure Content Understanding', 'FastAPI', 'React', 'Epicor ERP'],
     link: 'https://github.com/Jack1065?tab=repositories',
   },
   {
     id: 'p3',
-    title: 'Biomarker Classification Model',
-    description: 'ResNet-34 model to classify Glioblastoma biomarkers in MRI imaging.',
+    title: 'Biomarker Classification',
+    description:
+      'ResNet-34 deep-learning model classifying Glioblastoma biomarkers in MRI imaging with a reproducible training pipeline.',
     tech: ['Python', 'TensorFlow', 'Keras'],
     link: 'https://github.com/Jack1065?tab=repositories',
-  }
+  },
 ];
 
 const education = [
-  { school: 'University of Arizona', degree: 'Master of Science in Data Science', location: 'Tucson, AZ', date: 'Expected May 2027' },
-  { school: 'University of Wisconsin-Whitewater', degree: 'Bachelor of Science in Computer Science', minor: 'Web Application Development', location: 'Whitewater, WI', date: 'May 2025', notes: 'Honors: Dean’s List (2021–2025), Glenn R. Davis Scholarship (2021); Cumulative GPA: 3.75' }
+  {
+    school: 'University of Wisconsin–Whitewater',
+    degree: 'B.S. in Computer Science',
+    minor: 'Web Application Development',
+    location: 'Whitewater, WI',
+    date: 'May 2025',
+    notes: "Dean's List (2021–2025) · Glenn R. Davis Scholarship · GPA 3.75",
+  },
 ];
 
-const technicalSkills = {
-  languages: ['Python', 'C#', 'JavaScript', 'Java', 'PHP', 'C++', 'R', 'SQLite', 'TypeScript'],
-  frameworks: ['Qlik', 'React', 'Vue.js', 'Node.js', 'Express.js', '.NET Core', 'Django', 'Laravel', 'Bootstrap', 'Tailwind CSS', 'TensorFlow', 'PyTorch', 'scikit-learn', 'Keras', 'NumPy', 'Pandas'],
-  tools: ['Jira', 'Jenkins', 'Snowflake', 'Linux', 'Azure', 'AWS', 'Docker', 'Postman', 'Power BI', 'Tableau', 'Apache Atlas', 'PostgreSQL', 'Microsoft SQL Server', 'Hadoop (HBase, Hive, Spark)', 'CI/CD Pipelines']
-};
+const skillCategories: { label: string; items: string[] }[] = [
+  { label: 'Languages', items: ['Python', 'C#', 'JavaScript', 'TypeScript', 'Java', 'R', 'SQL'] },
+  { label: 'Frontend', items: ['React', 'Redux', 'Vue.js', 'Bootstrap', 'Tailwind CSS'] },
+  { label: 'Backend & APIs', items: ['Node.js', 'Express.js', '.NET Core', 'EF Core', 'Django', 'Laravel', 'FastAPI'] },
+  { label: 'AI & ML', items: ['Azure AI Foundry', 'Azure OpenAI', 'Document Intelligence', 'OpenAI API', 'RAG Pipelines', 'TensorFlow', 'PyTorch', 'Pandas'] },
+  { label: 'Cloud & Infra', items: ['Azure', 'Durable Functions', 'Service Bus', 'Container Registry', 'Azure VNet', 'Docker', 'Terraform', 'Bicep'] },
+  { label: 'Data & Analytics', items: ['Cosmos DB', 'Snowflake', 'PostgreSQL', 'MSSQL', 'MongoDB', 'Power BI', 'Tableau', 'Qlik'] },
+  { label: 'Enterprise Tools', items: ['Epicor ERP', 'Power Automate', 'Logic Apps', 'Postman', 'Jira', 'Jenkins', 'GitHub Actions'] },
+];
 
-const sampleExperience: ExperienceItem[] = [
+const experience: ExperienceItem[] = [
+  {
+    id: 'e-ica',
+    role: 'AI Software Engineer',
+    company: 'ICA Holdings',
+    location: 'Tucson, AZ',
+    period: 'Jan 2026 — Present',
+    current: true,
+    summary:
+      'I design and ship AI-powered software solutions across a hybrid Azure architecture — including agentic pipelines, document-processing systems, and full-stack applications integrated with Epicor ERP.',
+    tools: [
+      'Azure AI Foundry',
+      'Azure Content Understanding',
+      'Azure Function Apps',
+      'Azure API Management',
+      'Azure Virtual Network',
+      'Container Apps',
+      'AI Search',
+    ],
+  },
   {
     id: 'e-clinisys',
     role: 'Software Development Intern',
     company: 'Clinisys',
     location: 'Tucson, AZ',
-    period: 'May 2025 – August 2025',
-    description: 'Engineered features and optimizations for SaaS LIMS and LMS healthcare applications.',
+    period: 'May 2025 — Aug 2025',
     bullets: [
-      'Engineered new features and services for SaaS LIMS and LMS healthcare applications, streamlining clinical workflows and enhancing data accessibility for national healthcare providers',
-      'Optimized Power BI report load times, improving dashboard rendering speed across all platforms by 30%',
-      'Developed new unit tests for .NET Core backend services, increasing code coverage by 20% and improving overall application reliability',
-      'Built and optimized front-end features in React and Redux with TypeScript, ensuring adherence to Figma design specifications and enhancing overall user experience'
-    ]
+      'Delivered full-stack features and backend services for enterprise LIMS and LMS platforms used by national healthcare providers, improving clinical workflow efficiency.',
+      'Optimized Power BI reporting pipelines, cutting dashboard load times by 30% across all platforms.',
+      'Expanded .NET Core unit-test coverage by 20%, reducing regression risk ahead of production releases.',
+      'Built React, Redux, and TypeScript components to pixel-accurate Figma specs across clinical modules.',
+    ],
   },
   {
     id: 'e-rootriver',
-    role: 'Software Engineer Intern',
+    role: 'Software Engineer',
     company: 'Root River Co-Work',
     location: 'Racine, WI',
-    period: 'May 2023 – August 2024',
-    description: 'Developed backend, optimized CI/CD, and improved website infrastructure.',
+    period: 'May 2023 — Aug 2024',
     bullets: [
-      'Developed a robust CI/CD pipeline in Jenkins, reducing build times by 35% and accelerating deployment cycles',
-      'Optimized PHP backend architecture, increasing website load speed by 15% and boosting SEO performance by 8%',
-      'Facilitated the seamless transition to a new payment provider’s API, reducing payment processing time and decreasing transaction failures',
-      'Tuned Microsoft SQL Server queries through execution plan analysis and query restructuring to improve reporting performance'
-    ]
+      'Designed and deployed scalable .NET data-processing API services via Azure DevOps CI/CD for reliable ingestion, transformation, and delivery of client data.',
+      'Built a GPT-3.5 Turbo customer-feedback summarization tool with the OpenAI API to surface actionable insights from unstructured feedback.',
+      'Optimized a React/TypeScript frontend, reducing bundle size by 30% and improving page load speed by 35%.',
+      'Led migration to a new payment-provider API, reducing transaction failures and improving reliability.',
+    ],
   },
-  {
-    id: 'e-recon',
-    role: 'Project Manager',
-    company: 'Recon Relocation',
-    location: 'New Berlin, WI',
-    period: 'May 2018 – August 2022',
-    description: 'Led cross-functional teams and managed national project implementations.',
-    bullets: [
-      'Led cross-functional teams to coordinate commercial relocation projects, ensuring timely delivery and client satisfaction',
-      'Managed project schedules, budgets, and resource allocation, increasing operational efficiency',
-      'Implemented process improvements for logistics and communication, reducing project delays and enhancing team collaboration',
-      'Served as primary client liaison, resolving issues and maintaining strong relationships to drive repeat business'
-    ]
-  }
 ];
 
 const myPic = require('../MyPic.png');
 
+const navItems = [
+  { id: 'about', label: 'About' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'education', label: 'Education' },
+];
+
 export const Dashboard: React.FC = () => {
-  const headerRef = useRef<HTMLElement | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState('about');
+  const mainRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY || window.pageYOffset;
-      setScrolled(y > 20);
-    };
-
+    const onScroll = () => setScrolled((window.scrollY || window.pageYOffset) > 16);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // Reveal-on-scroll
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add('reveal-visible');
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
     );
-
-    const els = Array.from(document.querySelectorAll('.reveal')) as Element[];
-    els.forEach(el => observer.observe(el));
+    const els = mainRef.current?.querySelectorAll('.reveal') ?? [];
+    els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
-  // Observe experience items and mark the centered one
+  // Active section highlight for nav
   useEffect(() => {
-    const items = Array.from(document.querySelectorAll('.experience-item')) as HTMLElement[];
-    if (!items.length) return;
+    const sections = navItems
+      .map((n) => document.getElementById(n.id))
+      .filter((el): el is HTMLElement => el !== null);
 
-    const centerObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const el = entry.target as HTMLElement;
-        if (entry.intersectionRatio > 0.5) {
-          el.classList.add('centered');
-        } else {
-          el.classList.remove('centered');
-        }
-      });
-    }, {
-      root: null,
-      threshold: [0.5]
-    });
-
-    items.forEach(i => centerObserver.observe(i));
-    return () => centerObserver.disconnect();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px' }
+    );
+    sections.forEach((s) => observer.observe(s));
+    return () => observer.disconnect();
   }, []);
 
   return (
-    <>
-      <header
-        ref={headerRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-200 ${scrolled ? 'backdrop-blur-sm py-2' : 'py-3'}`}
-      >
-        <div className="max-w-6xl mx-auto flex items-center justify-between px-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold"><img src={myPic} alt="Jack Kurtz" className="w-full h-full object-cover rounded-lg" /></div>
-            <div>
-              <h2 className="text-white text-lg font-semibold">Jack Kurtz</h2>
-              <p className="text-slate-300 text-sm m-0">Software Engineer</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-          </div>
-          <nav className="hidden md:flex gap-4">
-            <a className="text-slate-200 hover:text-white" href="#projects">Projects</a>
-            <a className="text-slate-200 hover:text-white" href="#education">Education</a>
-            <a className="text-slate-200 hover:text-white" href="#skills">Skills</a>
-            <a className="text-slate-200 hover:text-white" href="#experience">Experience</a>
-            <a className="text-slate-200 hover:text-white" href="#contact">Contact</a>
+    <div className="site">
+      <div className="site-glow" aria-hidden="true" />
+
+      {/* ── Header ───────────────────────────────────────────── */}
+      <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
+        <div className="site-container header-inner">
+          <a href="#about" className="brand">
+            <span className="brand-mark"><img src={myPic} alt="Jack Kurtz" /></span>
+            <span className="brand-text">
+              <span className="brand-name">Jack Kurtz</span>
+              <span className="brand-role">AI Engineer</span>
+            </span>
+          </a>
+          <nav className="site-nav">
+            {navItems.map((n) => (
+              <a
+                key={n.id}
+                href={`#${n.id}`}
+                className={`nav-link ${activeSection === n.id ? 'is-active' : ''}`}
+              >
+                {n.label}
+              </a>
+            ))}
+            <a className="nav-cta" href="mailto:jkurtz354@gmail.com">
+              Get in touch
+            </a>
           </nav>
         </div>
       </header>
 
-  <div className="min-h-screen bg-gradient-to-b from-brand-blue-900 via-brand-blue-800 to-brand-blue-700 pt-20 pb-10">
-  <div className="max-w-6xl mx-auto px-4 dashboard-root">
-          <main className="space-y-6">
-            <section id="projects" className="reveal dashboard-section bg-white/5 backdrop-blur-sm rounded-xl p-6">
-              <h2 className="text-white text-2xl mb-4">Projects</h2>
-              {/* small screens: regular grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:hidden">
-                {sampleProjects.map((p, i) => (
-                  <article key={p.id} className="bg-white/6 border border-white/10 rounded-lg p-6 backdrop-blur-sm project-card">
-                    <h4 className="text-white font-semibold">{p.title}</h4>
-                    <p className="text-slate-200 text-sm mt-2">{p.description}</p>
-                    <p className="text-slate-400 text-xs mt-3">{p.tech.join(' • ')}</p>
-                    {p.link && <a className="inline-block mt-3 text-sky-300 hover:text-white" href={p.link}>View</a>}
-                  </article>
-                ))}
-              </div>
+      <main ref={mainRef} className="site-container site-main">
+        {/* ── Hero / About ───────────────────────────────────── */}
+        <section id="about" className="hero">
+          <div className="hero-photo">
+            <div className="photo-frame">
+              <img src={myPic} alt="Jack Kurtz" />
+            </div>
+          </div>
+          <p className="eyebrow">Hi, my name is</p>
+          <h1 className="hero-name">Jack Kurtz.</h1>
+          <h2 className="hero-tagline">I build AI automation on Azure.</h2>
+          <p className="hero-desc">
+            AI Engineer in Tucson, AZ, focused on architecting durable cloud pipelines,
+            document-intelligence systems, and full-stack applications that turn manual
+            workflows into measurable hours saved.
+          </p>
+          <div className="hero-actions">
+            <a className="btn btn-primary" href="#projects">View my work</a>
+            <a
+              className="btn btn-ghost"
+              href="https://github.com/Jack1065"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+            <a
+              className="btn btn-ghost"
+              href="https://www.linkedin.com/in/jack-kurtz-b51a44240"
+              target="_blank"
+              rel="noreferrer"
+            >
+              LinkedIn
+            </a>
+          </div>
+        </section>
 
-              {/* md+ screens: horizontal marquee that loops (cards move left and wrap) */}
-              <div className="marquee hidden md:block">
-                <ThreeCardAnimator speed={40} />
-                <div className="marquee-track">
-                  {[...sampleProjects, ...sampleProjects].map((p, i) => (
-                    <div key={`${p.id}-${i}`} className="marquee-item inline-block px-1">
-                      <article className="bg-white/6 border border-white/10 rounded-lg p-6 backdrop-blur-sm project-card">
-                        <h4 className="text-white font-semibold">{p.title}</h4>
-                        <p className="text-slate-200 text-sm mt-2">{p.description}</p>
-                        <p className="text-slate-400 text-xs mt-3">{p.tech.join(' • ')}</p>
-                        {p.link && <a className="inline-block mt-3 text-sky-300 hover:text-white" href={p.link}>View</a>}
-                      </article>
+        {/* ── Experience ─────────────────────────────────────── */}
+        <section id="experience" className="section reveal">
+          <div className="section-head">
+            <span className="section-index">01</span>
+            <h2 className="section-title">Experience</h2>
+            <span className="section-rule" />
+          </div>
+          <ol className="timeline">
+            {experience.map((e) => (
+              <li key={e.id} className="timeline-item">
+                <span className="timeline-dot" aria-hidden="true" />
+                <div className="exp-card">
+                  <div className="exp-top">
+                    <div>
+                      <h3 className="exp-role">
+                        {e.role}
+                        <span className="exp-company"> · {e.company}</span>
+                        {e.current && <span className="badge-current">Current</span>}
+                      </h3>
+                      {e.location && <p className="exp-loc">{e.location}</p>}
                     </div>
-                  ))}
+                    <span className="exp-period">{e.period}</span>
+                  </div>
+                  {e.summary && <p className="exp-summary">{e.summary}</p>}
+                  {e.bullets && e.bullets.length > 0 && (
+                    <ul className="exp-bullets">
+                      {e.bullets.map((b, i) => (
+                        <li key={i}>{b}</li>
+                      ))}
+                    </ul>
+                  )}
+                  {e.tools && e.tools.length > 0 && (
+                    <ul className="exp-tools">
+                      {e.tools.map((t) => (
+                        <li key={t}>{t}</li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
-              </div>
-            </section>
+              </li>
+            ))}
+          </ol>
+        </section>
 
-            <section id="education" className="reveal dashboard-section bg-white/5 backdrop-blur-sm rounded-xl p-6">
-              <h2 className="text-white text-2xl mb-4">Education</h2>
-              <div className="education-timeline">
-                <div className="timeline-line" />
-                <ul className="timeline-list">
-                  {education.map((ed, idx) => (
-                    <li key={idx} className="timeline-item reveal edu-anim">
-                      <div className="timeline-marker" aria-hidden="true" />
-                      <div className="timeline-content bg-white/6 border border-white/10 rounded-lg p-4">
-                        <div className="flex items-start justify-between gap-4">
-                          <div>
-                            <h4 className="text-white text-lg font-semibold">{ed.school}</h4>
-                            <div className="text-slate-300 text-sm">{ed.degree}{ed.minor ? ` • Minor: ${ed.minor}` : ''}</div>
-                            {ed.location && <div className="text-slate-400 text-xs mt-1">{ed.location}</div>}
-                          </div>
-                          <div className="text-slate-400 text-sm text-right">{ed.date}</div>
-                        </div>
-                        {ed.notes && <p className="text-slate-200 text-sm mt-3">{ed.notes}</p>}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </section>
-
-            <section id="skills" className="reveal dashboard-section bg-white/5 backdrop-blur-sm rounded-xl p-6">
-              <h2 className="text-white text-2xl mb-4">Technical Skills</h2>
-              <div className="text-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="text-white font-semibold">Languages</h4>
-                  <p className="text-slate-300 text-sm">{technicalSkills.languages.join(', ')}</p>
+        {/* ── Projects ───────────────────────────────────────── */}
+        <section id="projects" className="section reveal">
+          <div className="section-head">
+            <span className="section-index">02</span>
+            <h2 className="section-title">Selected Projects</h2>
+            <span className="section-rule" />
+          </div>
+          <div className="project-grid">
+            {projects.map((p) => (
+              <div key={p.id} className="project-card">
+                <div className="project-card-head">
+                  <span className="project-folder" aria-hidden="true">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" />
+                    </svg>
+                  </span>
                 </div>
-                <div>
-                  <h4 className="text-white font-semibold">Frameworks & Libraries</h4>
-                  <p className="text-slate-300 text-sm">{technicalSkills.frameworks.join(', ')}</p>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold">Tools & Platforms</h4>
-                  <p className="text-slate-300 text-sm">{technicalSkills.tools.join(', ')}</p>
-                </div>
-                <div>
-                  <h4 className="text-white font-semibold">Other</h4>
-                  <p className="text-slate-300 text-sm">Big Data Analytics, ETL workflows, Agile Methodologies, Project Management, Web Design, SEO, PHI and HIPAA Compliance</p>
-                </div>
-              </div>
-            </section>
-
-            <section id="experience" className="reveal dashboard-section bg-white/5 backdrop-blur-sm rounded-xl p-6">
-              <h2 className="text-white text-2xl mb-16 ">Experience</h2>
-              {/* Make the experience column taller and show most recent first */}
-              <div className="experience-column">
-                <ul className="space-y-8">
-                  {[...sampleExperience].map(e => (
-                    <li key={e.id} className="bg-white/6 border border-white/10 rounded-lg p-6 experience-item">
-                      <div className="experience-inner mb-8">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h4 className="text-white text-lg font-semibold">{e.role}</h4>
-                            <div className="text-slate-300 text-sm">{e.company}</div>
-                          </div>
-                          <div className="text-slate-400 text-sm">{e.period}</div>
-                        </div>
-                        <p className="text-slate-200 text-sm mt-3">{e.description}</p>
-                      </div>
-                    </li>
+                <h3 className="project-title">{p.title}</h3>
+                <p className="project-desc">{p.description}</p>
+                <ul className="project-tech">
+                  {p.tech.map((t) => (
+                    <li key={t}>{t}</li>
                   ))}
                 </ul>
               </div>
-            </section>
+            ))}
+          </div>
+        </section>
 
-            <section id="contact" className="reveal dashboard-section bg-white/5 backdrop-blur-sm rounded-xl p-6">
-              <h2 className="text-white text-2xl mb-4">Contact</h2>
-              <ul className="text-slate-200 space-y-2">
-                <li>Email: <a className="text-sky-300" href="mailto:jkurtz354@gmail.com">jkurtz354@gmail.com</a></li>
-                <li>Location: Tucson, Arizona</li>
-                <li>GitHub: <a className="text-sky-300" href="https://github.com/Jack1065" target="_blank" rel="noreferrer">Jack1065</a></li>
-              </ul>
-            </section>
-          </main>
+        {/* ── Skills ─────────────────────────────────────────── */}
+        <section id="skills" className="section reveal">
+          <div className="section-head">
+            <span className="section-index">03</span>
+            <h2 className="section-title">Technical Skills</h2>
+            <span className="section-rule" />
+          </div>
+          <div className="skills-grid">
+            {skillCategories.map((cat) => (
+              <div key={cat.label} className="skill-group">
+                <h3 className="skill-label">{cat.label}</h3>
+                <ul className="skill-pills">
+                  {cat.items.map((s) => (
+                    <li key={s} className="skill-pill">{s}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ── Education ──────────────────────────────────────── */}
+        <section id="education" className="section reveal">
+          <div className="section-head">
+            <span className="section-index">04</span>
+            <h2 className="section-title">Education</h2>
+            <span className="section-rule" />
+          </div>
+          {education.map((ed) => (
+            <div key={ed.school} className="edu-card">
+              <div className="edu-top">
+                <div>
+                  <h3 className="edu-school">{ed.school}</h3>
+                  <p className="edu-degree">
+                    {ed.degree}
+                    {ed.minor ? ` · Minor in ${ed.minor}` : ''}
+                  </p>
+                  <p className="edu-loc">{ed.location}</p>
+                </div>
+                <span className="edu-date">{ed.date}</span>
+              </div>
+              {ed.notes && <p className="edu-notes">{ed.notes}</p>}
+            </div>
+          ))}
+        </section>
+
+        {/* ── Contact ────────────────────────────────────────── */}
+        <section id="contact" className="contact reveal">
+          <p className="eyebrow">What's next?</p>
+          <h2 className="contact-title">Let's build something.</h2>
+          <p className="contact-desc">
+            I'm always open to discussing AI engineering, cloud architecture, or interesting
+            problems worth solving. My inbox is open.
+          </p>
+          <a className="btn btn-primary btn-lg" href="mailto:jkurtz354@gmail.com">
+            Say hello
+          </a>
+        </section>
+      </main>
+
+      <footer className="site-footer">
+        <div className="site-container footer-inner">
+          <span>© {new Date().getFullYear()} Jack Kurtz</span>
+          <div className="footer-links">
+            <a href="https://github.com/Jack1065" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.linkedin.com/in/jack-kurtz-b51a44240" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="mailto:jkurtz354@gmail.com">Email</a>
+          </div>
         </div>
-      </div>
-    </>
+      </footer>
+    </div>
   );
 };
 

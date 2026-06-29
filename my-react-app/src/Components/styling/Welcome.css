@@ -1,81 +1,119 @@
-.welcome-root{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:linear-gradient(180deg, rgba(2,6,23,0.8), rgba(2,6,23,0.6));
-  z-index:1000;
-  backdrop-filter: blur(6px);
+.welcome-root {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f6f9;
+  cursor: pointer;
+  animation: welcome-fade-out 0.55s ease 2.05s forwards;
 }
 
-.welcome-inner{
-  max-width:720px;
-  width:94%;
-  background:linear-gradient(180deg, rgba(15,23,42,0.9), rgba(15,23,42,0.85));
-  border-radius:12px;
-  padding:28px;
-  text-align:center;
-  box-shadow:0 8px 30px rgba(2,6,23,0.6);
-  color: #e6eef8;
+.welcome-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(38rem 28rem at 50% 38%, rgba(139, 145, 240, 0.16), transparent 62%),
+    radial-gradient(30rem 22rem at 72% 70%, rgba(255, 184, 190, 0.12), transparent 60%);
 }
 
-.welcome-logo{
-  width:72px;
-  height:72px;
-  background:#0f172a;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:40px;
-  font-weight:700;
-  font-size:26px;
-  margin-bottom:14px;
+.welcome-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
 }
 
-.welcome-title{
-  margin:0 0 6px 0;
-  font-size:28px;
-  letter-spacing: -0.4px;
+.welcome-mark {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(28, 33, 51, 0.12);
+  box-shadow: 0 6px 18px rgba(28, 33, 51, 0.08);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  animation: welcome-pop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.welcome-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-.welcome-sub{
-  margin:0 0 18px 0;
-  color:#cbd5e1;
+.welcome-title {
+  margin: 0;
+  font-size: clamp(1.9rem, 6vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #2a2f3a;
+  animation: welcome-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.08s both;
 }
 
-.welcome-actions{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  margin-top:6px;
+.welcome-sub {
+  margin: 0.45rem 0 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.92rem;
+  color: #6e75e8;
+  animation: welcome-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.16s both;
 }
 
-.welcome-cta{
-  background:linear-gradient(90deg,#06b6d4,#3b82f6);
-  color:white;
-  border:none;
-  padding:10px 18px;
-  border-radius:8px;
-  font-weight:600;
-  cursor:pointer;
+.welcome-progress {
+  width: 160px;
+  height: 2px;
+  margin-top: 2rem;
+  border-radius: 2px;
+  background: rgba(28, 33, 51, 0.1);
+  overflow: hidden;
+}
+.welcome-progress-bar {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #8b91f0, #6e75e8);
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: welcome-load 2s cubic-bezier(0.4, 0, 0.2, 1) 0.2s forwards;
 }
 
-.welcome-skip{
-  background:transparent;
-  color:#94a3b8;
-  border:1px solid rgba(148,163,184,0.12);
-  padding:8px 14px;
-  border-radius:8px;
-  cursor:pointer;
+.welcome-hint {
+  margin-top: 1.1rem;
+  font-size: 0.76rem;
+  color: #888e9c;
+  animation: welcome-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
-.welcome-hint{
-  margin-top:12px;
-  font-size:12px;
-  color:#7f8fa3;
+@keyframes welcome-pop {
+  from { opacity: 0; transform: scale(0.8); }
+  to   { opacity: 1; transform: none; }
 }
 
-@media (prefers-reduced-motion: reduce){
-  .welcome-root, .welcome-inner { transition: none !important; }
+@keyframes welcome-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes welcome-load {
+  to { transform: scaleX(1); }
+}
+
+@keyframes welcome-fade-out {
+  to { opacity: 0; visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .welcome-root,
+  .welcome-mark,
+  .welcome-title,
+  .welcome-sub,
+  .welcome-hint,
+  .welcome-progress-bar { animation: none; }
+  .welcome-progress-bar { transform: scaleX(1); }
 }

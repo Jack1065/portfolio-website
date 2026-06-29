@@ -10,39 +10,28 @@ type WelcomeProps = {
 const Welcome: React.FC<WelcomeProps> = ({ onContinue }) => {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      // Only Enter key dismisses the welcome
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' || e.key === 'Escape') {
         onContinue();
       }
-      // ignore other keys (including Escape)
     };
-
-    // focus the primary button for accessibility
-    const timer = setTimeout(() => {
-      const btn = document.querySelector('.welcome-cta') as HTMLButtonElement | null;
-      btn?.focus();
-    }, 50);
-
     window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      clearTimeout(timer);
-    };
+    return () => window.removeEventListener('keydown', onKey);
   }, [onContinue]);
 
   return (
-    <div className="welcome-root" role="dialog" aria-modal="true" aria-label="Welcome">
+    <div className="welcome-root" role="dialog" aria-modal="true" aria-label="Welcome" onClick={onContinue}>
+      <div className="welcome-glow" aria-hidden="true" />
       <div className="welcome-inner">
-        <img className="welcome-logo" src={myPic} alt="Welcome" />
-        <h1 className="welcome-title">Welcome — I’m Jack Kurtz</h1>
-        <p className="welcome-sub">Software Engineer</p>
-        <div className="welcome-actions">
-          <button className="welcome-cta" onClick={onContinue}>Enter</button>
+        <span className="welcome-mark"><img src={myPic} alt="Jack Kurtz" /></span>
+        <h1 className="welcome-title">Jack Kurtz</h1>
+        <p className="welcome-sub">AI Engineer</p>
+        <div className="welcome-progress" aria-hidden="true">
+          <span className="welcome-progress-bar" />
         </div>
-        <div className="welcome-hint">Press Enter to continue</div>
+        <div className="welcome-hint">Click anywhere to enter</div>
       </div>
     </div>
   );
 };
-    
+
 export default Welcome;
