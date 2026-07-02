@@ -23,7 +23,18 @@ const Welcome: React.FC<WelcomeProps> = ({ onContinue }) => {
       <div className="welcome-glow" aria-hidden="true" />
       <div className="welcome-inner">
         <span className="welcome-mark"><img src={myPic} alt="Jack Kurtz" /></span>
-        <h1 className="welcome-title">Jack Kurtz</h1>
+        <h1 className="welcome-title" aria-label="Jack Kurtz">
+          {'Jack Kurtz'.split('').map((ch, i) => (
+            <span
+              key={i}
+              className="welcome-letter"
+              aria-hidden="true"
+              style={{ animationDelay: `${0.12 + i * 0.05}s` }}
+            >
+              {ch === ' ' ? ' ' : ch}
+            </span>
+          ))}
+        </h1>
         <p className="welcome-sub">AI Engineer</p>
         <div className="welcome-progress" aria-hidden="true">
           <span className="welcome-progress-bar" />

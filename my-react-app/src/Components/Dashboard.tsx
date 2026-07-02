@@ -1,4 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
+import ThreeBackground from './ThreeBackground.tsx';
+import Cursor from './Cursor.tsx';
+import ScrollProgress from './ScrollProgress.tsx';
+import Magnetic from './Magnetic.tsx';
+import TiltCard from './TiltCard.tsx';
+import Typewriter from './Typewriter.tsx';
 import './styling/Dashboard.css';
 
 type Project = {
@@ -177,6 +183,9 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="site">
+      <ThreeBackground />
+      <Cursor />
+      <ScrollProgress />
       <div className="site-glow" aria-hidden="true" />
 
       {/* ── Header ───────────────────────────────────────────── */}
@@ -215,31 +224,48 @@ export const Dashboard: React.FC = () => {
             </div>
           </div>
           <p className="eyebrow">Hi, my name is</p>
-          <h1 className="hero-name">Jack Kurtz.</h1>
-          <h2 className="hero-tagline">I build AI automation on Azure.</h2>
+          <h1 className="hero-name">
+            <span className="gradient-text">Jack Kurtz.</span>
+          </h1>
+          <h2 className="hero-tagline">
+            <Typewriter
+              phrases={[
+                'I build AI automation on Azure.',
+                'I ship agentic document pipelines.',
+                'I turn manual workflows into hours saved.',
+                'I engineer full-stack cloud systems.',
+              ]}
+            />
+          </h2>
           <p className="hero-desc">
             AI Engineer in Tucson, AZ, focused on architecting durable cloud pipelines,
             document-intelligence systems, and full-stack applications that turn manual
             workflows into measurable hours saved.
           </p>
           <div className="hero-actions">
-            <a className="btn btn-primary" href="#projects">View my work</a>
-            <a
-              className="btn btn-ghost"
-              href="https://github.com/Jack1065"
-              target="_blank"
-              rel="noreferrer"
-            >
-              GitHub
-            </a>
-            <a
-              className="btn btn-ghost"
-              href="https://www.linkedin.com/in/jack-kurtz-b51a44240"
-              target="_blank"
-              rel="noreferrer"
-            >
-              LinkedIn
-            </a>
+            <Magnetic>
+              <a className="btn btn-primary" href="#projects">View my work</a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                className="btn btn-ghost"
+                href="https://github.com/Jack1065"
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                className="btn btn-ghost"
+                href="https://www.linkedin.com/in/jack-kurtz-b51a44240"
+                target="_blank"
+                rel="noreferrer"
+              >
+                LinkedIn
+              </a>
+            </Magnetic>
           </div>
         </section>
 
@@ -254,7 +280,7 @@ export const Dashboard: React.FC = () => {
             {experience.map((e) => (
               <li key={e.id} className="timeline-item">
                 <span className="timeline-dot" aria-hidden="true" />
-                <div className="exp-card">
+                <TiltCard className="exp-card" maxTilt={2}>
                   <div className="exp-top">
                     <div>
                       <h3 className="exp-role">
@@ -281,7 +307,7 @@ export const Dashboard: React.FC = () => {
                       ))}
                     </ul>
                   )}
-                </div>
+                </TiltCard>
               </li>
             ))}
           </ol>
@@ -295,8 +321,12 @@ export const Dashboard: React.FC = () => {
             <span className="section-rule" />
           </div>
           <div className="project-grid">
-            {projects.map((p) => (
-              <div key={p.id} className="project-card">
+            {projects.map((p, idx) => (
+              <TiltCard key={p.id} className="project-card" maxTilt={8}>
+                <div
+                  className="project-card-inner reveal-child"
+                  style={{ ['--stagger' as any]: `${idx * 90}ms` }}
+                >
                 <div className="project-card-head">
                   <span className="project-folder" aria-hidden="true">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
@@ -311,7 +341,8 @@ export const Dashboard: React.FC = () => {
                     <li key={t}>{t}</li>
                   ))}
                 </ul>
-              </div>
+                </div>
+              </TiltCard>
             ))}
           </div>
         </section>
@@ -370,9 +401,11 @@ export const Dashboard: React.FC = () => {
             I'm always open to discussing AI engineering, cloud architecture, or interesting
             problems worth solving. My inbox is open.
           </p>
-          <a className="btn btn-primary btn-lg" href="mailto:jkurtz354@gmail.com">
-            Say hello
-          </a>
+          <Magnetic className="magnetic-inline" strength={18}>
+            <a className="btn btn-primary btn-lg" href="mailto:jkurtz354@gmail.com">
+              Say hello
+            </a>
+          </Magnetic>
         </section>
       </main>
 

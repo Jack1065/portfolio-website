@@ -108,12 +108,35 @@
   to { opacity: 0; visibility: hidden; }
 }
 
+/* Per-letter cascade for the title */
+.welcome-title { animation: none; }
+.welcome-letter {
+  display: inline-block;
+  white-space: pre;
+  opacity: 0;
+  animation: welcome-letter-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes welcome-letter-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.6em) rotate(6deg) scale(0.85);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .welcome-root,
   .welcome-mark,
   .welcome-title,
   .welcome-sub,
   .welcome-hint,
+  .welcome-letter,
   .welcome-progress-bar { animation: none; }
+  .welcome-letter { opacity: 1; }
   .welcome-progress-bar { transform: scaleX(1); }
 }
